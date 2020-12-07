@@ -56,7 +56,7 @@ let simulation = d3.forceSimulation()
 	.force("center", d3.forceCenter(width / 2, height / 2))
 	.force("x", d3.forceX(width / 2).strength(0.1))
 	.force("y", d3.forceY(height / 2).strength(0.1))
-	.force("charge", d3.forceManyBody().strength(-100).theta(0.2))
+	.force("charge", d3.forceManyBody().strength(-100).theta(2))
 	.force("link", d3.forceLink().strength(0.2).id(d => d.id))
 	.alphaTarget(0)
 	.alphaDecay(0.05);
