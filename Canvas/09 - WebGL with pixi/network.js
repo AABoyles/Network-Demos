@@ -1,20 +1,24 @@
 let stage = new PIXI.Container();
-let renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight,
-    {antialias: !0, transparent: !0, resolution: 1});
+let renderer = PIXI.autoDetectRenderer(width, height,
+  {antialias: !0, transparent: !0, resolution: 1});
 
 document.body.appendChild(renderer.view);
 
 let simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id((d) => d.id))
-    .force('charge', d3.forceManyBody())
-    .force('center', d3.forceCenter(width / 2, height / 2));
+	.force("center", d3.forceCenter(width / 2, height / 2))
+	.force("x", d3.forceX(width / 2).strength(0.1))
+	.force("y", d3.forceY(height / 2).strength(0.1))
+	.force("charge", d3.forceManyBody().strength(-100))
+	.force("link", d3.forceLink().strength(0.2).id(d => d.id))
+	.alphaTarget(0)
+	.alphaDecay(0.05)
 
 let linkStage = new PIXI.Graphics();
 stage.addChild(linkStage);
 
 nodes.forEach(node => {
   node.gfx = new PIXI.Graphics();
-  node.gfx.lineStyle(1.5, 0xFFFFFF);
+  node.gfx.lineStyle(1, 0xFFFFFF);
   node.gfx.beginFill(0x0000FF);
   node.gfx.drawCircle(0, 0, 5);
   stage.addChild(node.gfx);
@@ -43,7 +47,7 @@ function ticked() {
   }
 
   linkStage.clear();
-  linkStage.alpha = 0.1;
+  linkStage.alpha = 1;
 
   for(let i = 0; i < n; i++){
     let { source, target } = links[i];
@@ -60,18 +64,21 @@ function ticked() {
 }
 
 function dragstarted(e) {
-    if (!e.active) simulation.alphaTarget(0.3).restart();
-    e.subject.fx = e.subject.x;
-    e.subject.fy = e.subject.y;
+  if (!e.active) simulation.alphaTarget(0.3).restart();
+  let s = e.subject;
+  s.fx = s.x;
+  s.fy = s.y;
 }
 
 function dragged(e) {
-    e.subject.fx = e.x;
-    e.subject.fy = e.y;
+  let s = e.subject;
+  s.fx = e.x;
+  s.fy = e.y;
 }
 
 function dragended(e) {
-    if (!e.active) simulation.alphaTarget(0);
-    e.subject.fx = null;
-    e.subject.fy = null;
+  if (!e.active) simulation.alphaTarget(0);
+  let s = e.subject;
+  s.fx = null;
+  s.fy = null;
 }
