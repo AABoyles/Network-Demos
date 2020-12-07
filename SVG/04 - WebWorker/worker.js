@@ -15,12 +15,11 @@ self.onmessage = event => {
       .force('link', d3.forceLink(links).id(d => d.id))
       .force('charge', d3.forceManyBody().strength(-250))
       .force('center', d3.forceCenter(700, 700));
-    console.log("Setup time: ", (Date.now() - start).toLocaleString(), "ms");
-  } else {
-    force.tick();
-    console.log("Tick time: ", (Date.now() - start).toLocaleString(), "ms");
   }
-  start = Date.now();
+  force.on('tick', respond);
+};
+
+function respond(){
   let outnodes = new Array(n);
   let outlinks = new Array(l);
   for(let i = 0; i < n; i++){
@@ -35,6 +34,5 @@ self.onmessage = event => {
     };
   }
   let graph = encoder.encode(JSON.stringify({nodes: outnodes, links: outlinks})).buffer;
-  console.log("Encode time:", (Date.now() - start).toLocaleString(), "ms");
-  postMessage({ graph, start: Date.now() }, [graph]);
-};
+  postMessage({ graph }, [graph]);
+}
