@@ -10,16 +10,16 @@ I don't have a complex benchmarking architecture, just [a count of the number of
 
 | Index | Strategy              | SVG  | Canvas |
 | ----- | --------------------- | ---- | ------ |
-| 01    | [Basic](#01---Basic)  | [3](https://aaboyles.github.io/Network-Demos/SVG/01%20-%20Basic/) | [14](https://aaboyles.github.io/Network-Demos/Canvas/01%20-%20Basic/) |
-| 02    | [Increased Theta](#02---Increased-Theta) | [4](https://aaboyles.github.io/Network-Demos/SVG/02%20-%20Increased%20Theta/) | [29](https://aaboyles.github.io/Network-Demos/Canvas/02%20-%20Increased%20Theta/) |
-| 03    | [Finite Max-Distance](#03---Finite-Max-Distance) | [3](https://aaboyles.github.io/Network-Demos/SVG/03%20-%20Finite%20Distance/) | [10](https://aaboyles.github.io/Network-Demos/SVG/03%20-%20Finite%20Distance/) |
-| 04    | [Force-Reuse](#04---Force-Reuse) | [4](https://aaboyles.github.io/Network-Demos/SVG/04%20-%20Force-Reuse/) | [15](https://aaboyles.github.io/Network-Demos/Canvas/04%20-%20Force-Reuse/) |
-| 05    | [Force-Sampled](#05---Force-Sampled) | [4](https://aaboyles.github.io/Network-Demos/SVG/05%20-%20Force-Sampled/) | [24](https://aaboyles.github.io/Network-Demos/SVG/05%20-%20Force-Sampled/) |
-| 06    | [requestAnimationFrame](#06---requestAnimationFrame) |      |        |
-| 07    | [WASM](#07---WASM) |      |        |
-| 08    | [Webworker](#08---Webworker) |      |        |
-| 09    | [WebGL (Pixi)](#09---WebGL-(Pixi)) | (NA) | [13](https://aaboyles.github.io/Network-Demos/Canvas/09%20-%20WebGL%20with%20pixi/) |
-| 10    | [GPUjs](#10---GPUjs) |      |        |
+| 01    | [Basic](#01---basic)  | [3](https://aaboyles.github.io/Network-Demos/SVG/01%20-%20Basic/) | [14](https://aaboyles.github.io/Network-Demos/Canvas/01%20-%20Basic/) |
+| 02    | [Increased Theta](#02---increased-theta) | [4](https://aaboyles.github.io/Network-Demos/SVG/02%20-%20Increased%20Theta/) | [29](https://aaboyles.github.io/Network-Demos/Canvas/02%20-%20Increased%20Theta/) |
+| 03    | [Finite Max-Distance](#03---finite-max-distance) | [3](https://aaboyles.github.io/Network-Demos/SVG/03%20-%20Finite%20Distance/) | [10](https://aaboyles.github.io/Network-Demos/SVG/03%20-%20Finite%20Distance/) |
+| 04    | [Force-Reuse](#04---force-reuse) | [4](https://aaboyles.github.io/Network-Demos/SVG/04%20-%20Force-Reuse/) | [15](https://aaboyles.github.io/Network-Demos/Canvas/04%20-%20Force-Reuse/) |
+| 05    | [Force-Sampled](#05---force-sampled) | [4](https://aaboyles.github.io/Network-Demos/SVG/05%20-%20Force-Sampled/) | [24](https://aaboyles.github.io/Network-Demos/SVG/05%20-%20Force-Sampled/) |
+| 06    | [requestAnimationFrame](#06---requestanimationframe) |      |        |
+| 07    | [WASM](#07---wasm) |      |        |
+| 08    | [Webworker](#08---webworker) |      |        |
+| 09    | [WebGL (Pixi)](#09---webgl-(pixi)) | (NA) | [13](https://aaboyles.github.io/Network-Demos/Canvas/09%20-%20WebGL%20with%20pixi/) |
+| 10    | [GPUjs](#10---gpujs) |      |        |
 
 (Note that the indices are essentially arbitrary, and just for managing ordering in Finder/File Explorer.)
 
@@ -39,7 +39,7 @@ Here we see the first stark contrast between SVG and Canvas Performance. Canvas 
 
 [d3-force](https://github.com/d3/d3-force) leverages [quadtrees](https://en.wikipedia.org/wiki/Quadtree) and the [Barnes-Hut approximation](https://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation) to simplify node trajectory computations. Essentially, when a bunch of nodes are far away from a node, d3 just treats all those far away nodes as one big heavy node located in the middle, meaning it only needs to compute the effect of the forces once, rather than as many times as there are far-away nodes. But the definition of "far away" is related to this theta parameter. Set theta small, and you make "far away" mean farther away. Increase it and we can perform the approximation more aggressively, meaning the browser can pump up the frame rate.
 
-One problem with this approach is that once the Network reaches a reasonably stable equilibrium, this causes a minor-but-noticeable juddering effect on nodes that are otherwise well-placed. For most applications, this is probably an acceptable tradeoff.
+One huge upside to this approach it that it appears to more quickly collect the network into a meaningful agglomeration of distinct clusters (i.e. it spends a lot less time looking like a hairball). However, it comes with one problem as well: once the Network reaches a reasonably stable equilibrium, this approach exhibit a minor-but-noticeable juddering effect on nodes that are otherwise well-placed. For most applications, this is probably an acceptable tradeoff.
 
 ### 03 - Finite Max-Distance
 
@@ -123,3 +123,4 @@ D3 and its plugins are hardly the only available option for rendering networks i
 ## Things I want to try but can't find the resources for:
 
 * Use Cytoscape.js Force layouts (CoSE, fCoSE) with D3 as renderer.
+* Pre-fit the network using one of the Cytoscape.js hybrid layouts for initial node positions and then pass those to D3 to apply a more conventional algorithm for animated interaction.
