@@ -84,7 +84,7 @@ function simulationUpdate(){
 		context.stroke();
 	}
 
-	context.fillStyle = "rgba(128, 128, 255, 1)";
+	context.fillStyle = "#0000ff";
 	for (let i = 0; i < n; i++) {
 		let d = nodes[i];
 		context.beginPath();
