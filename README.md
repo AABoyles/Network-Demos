@@ -13,13 +13,13 @@ I don't have a complex benchmarking architecture, just [a count of the number of
 | 01    | [Basic](#01---Basic)  | [3](https://aaboyles.github.io/Network-Demos/SVG/01%20-%20Basic/) | [14](https://aaboyles.github.io/Network-Demos/Canvas/01%20-%20Basic/) |
 | 02    | [Increased Theta](#02---Increased-Theta) | [4](https://aaboyles.github.io/Network-Demos/SVG/02%20-%20Increased%20Theta/) | [29](https://aaboyles.github.io/Network-Demos/Canvas/02%20-%20Increased%20Theta/) |
 | 03    | [Finite Max-Distance](#03---Finite-Max-Distance) | [3](https://aaboyles.github.io/Network-Demos/SVG/03%20-%20Finite%20Distance/) | [10](https://aaboyles.github.io/Network-Demos/SVG/03%20-%20Finite%20Distance/) |
-| 04    | [Force-Reuse](#04---Force-Reuse) | [[4]](https://aaboyles.github.io/Network-Demos/SVG/04%20-%20Force-Reuse/) | [[15]](https://aaboyles.github.io/Network-Demos/Canvas/04%20-%20Force-Reuse/) |
-| 05    | [Force-Sampled](#05---Force-Sampled) | ()[] | [24]() |
-| 06    | requestAnimationFrame |      |        |
-| 07    | WASM                  |      |        |
-| 08    | Webworker             |      |        |
-| 09    | WebGL (Pixi)          | (NA) | [13](https://aaboyles.github.io/Network-Demos/Canvas/09%20-%20WebGL%20with%20pixi/) |
-| 10    | GPUjs                 |      |        |
+| 04    | [Force-Reuse](#04---Force-Reuse) | [4](https://aaboyles.github.io/Network-Demos/SVG/04%20-%20Force-Reuse/) | [15](https://aaboyles.github.io/Network-Demos/Canvas/04%20-%20Force-Reuse/) |
+| 05    | [Force-Sampled](#05---Force-Sampled) | [4](https://aaboyles.github.io/Network-Demos/SVG/05%20-%20Force-Sampled/) | [24](https://aaboyles.github.io/Network-Demos/SVG/05%20-%20Force-Sampled/) |
+| 06    | [requestAnimationFrame](#06---requestAnimationFrame) |      |        |
+| 07    | [WASM](#07---WASM) |      |        |
+| 08    | [Webworker](#08---Webworker) |      |        |
+| 09    | [WebGL (Pixi)](#09---WebGL-(Pixi)) | (NA) | [13](https://aaboyles.github.io/Network-Demos/Canvas/09%20-%20WebGL%20with%20pixi/) |
+| 10    | [GPUjs](#10---GPUjs) |      |        |
 
 (Note that the indices are essentially arbitrary, and just for managing ordering in Finder/File Explorer.)
 
