@@ -1,22 +1,31 @@
 importScripts('https://unpkg.com/d3@6.2.0/dist/d3.min.js');
 
-let force, nodes, links, n, l;
+let force, nodes, links, width, length, n, l;
 
 const encoder = new TextEncoder();
 
 self.onmessage = event => {
   let start = Date.now();
-  if(event.data){
+  if(event.data.nodes){
     nodes = event.data.nodes;
     links = event.data.links;
+    width = event.data.width;
+    height = event.data.height;
     n = nodes.length;
     l = links.length;
     force = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id))
-      .force('charge', d3.forceManyBody().strength(-250))
-      .force('center', d3.forceCenter(700, 700));
+      .force("center", d3.forceCenter(width/2, height/2))
+      .force("x", d3.forceX(width / 2).strength(0.1))
+      .force("y", d3.forceY(height / 2).strength(0.1))
+      .force("charge", d3.forceManyBody().strength(-100))
+      .force("link", d3.forceLink(links).strength(0.2).id(d => d.id))
+      .alphaTarget(0)
+      .alphaDecay(0.05)
+    force.on('tick', respond);
   }
-  force.on('tick', respond);
+  if(event.data.alphaTarget){
+    force.alphaTarget(event.data.alphaTarget).restart();
+  }
 };
 
 function respond(){

@@ -29,9 +29,9 @@ let node = g.append("g")
       .on("end", dragended));
 
 function dragstarted(event) {
-  if (!event.active) simulation.alphaTarget(0.3).restart();
   event.subject.fx = event.subject.x;
   event.subject.fy = event.subject.y;
+  if (!event.active) simulation.postMessage({alphaTarget: 0.3});
 }
 
 function dragged(event) {
@@ -40,29 +40,27 @@ function dragged(event) {
 }
 
 function dragended(event) {
-  if (!event.active) simulation.alphaTarget(0);
   event.subject.fx = null;
   event.subject.fy = null;
+  if (!event.active) simulation.postMessage({alphaTarget: 0});
 }
 
 svg.call(
 	d3.zoom().scaleExtent([1 / 10, 8])
-		.on("zoom", e => {
-			g.attr("transform", e.transform)
-			simulationUpdate();
-		}));
+		.on("zoom", e => g.attr("transform", e.transform)));
 
 let simulation = new Worker("worker.js");
+
 simulation.onmessage = event => {
-  let graph = JSON.parse(decoder.decode(event.data.graph));
+  let {links, nodes} = JSON.parse(decoder.decode(event.data.graph));
   
-  link.data(graph.links)
+  link.data(links)
       .attr("x1", d => d.source.x)
       .attr("y1", d => d.source.y)
       .attr("x2", d => d.target.x)
       .attr("y2", d => d.target.y);
 
-  node.data(graph.nodes)
+  node.data(nodes)
       .attr("transform", d => `translate(${d.x},${d.y})`);
   
   ticks++;
@@ -70,5 +68,7 @@ simulation.onmessage = event => {
 
 simulation.postMessage({
   nodes: nodes,
-  links: links
+  links: links,
+  width: width,
+  height: height
 });
