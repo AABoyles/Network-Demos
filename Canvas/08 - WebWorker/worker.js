@@ -1,18 +1,22 @@
+"use strict";
+
 importScripts("https://d3js.org/d3.v6.min.js");
 
-let offscreen, nodes, links, width, height, subject, n, simulation;
+let offscreen, context, nodes, links, width, height, subject, n, simulation;
 let transform = d3.zoomIdentity;
 const tao = Math.PI * 2;
+const r = 5, r2 = r*r;
 let ticks = 0;
 
 self.onmessage = function(e) {
-  switch (e.data.type) {
-    case 'setup': setup(e.data); break;
-    case 'zoom': transform = e.data.transform; simulation.alphaTarget(0.3).restart(); break;
-    case 'dragsubject': dragsubject(e.data); break;
-    case 'dragstarted': dragstarted(e.data); break;
-    case 'dragged': dragged(e.data); break;
-    case 'dragended': dragended(e.data.active); break;
+  let ed = e.data;
+  switch (ed.type) {
+    case 'setup': setup(ed); break;
+    case 'zoom': transform = d3.zoomIdentity.translate(ed.transform.x, ed.transform.y).scale(ed.transform.k); draw(); break;
+    case 'dragsubject': dragsubject(ed); break;
+    case 'dragstarted': dragstarted(ed); break;
+    case 'dragged': dragged(ed); break;
+    case 'dragended': dragended(ed.active); break;
   }
 };
 
@@ -23,7 +27,7 @@ function setup(data){
   width = data.width;
   height = data.height;
   n = nodes.length;
-  let context = offscreen.getContext('2d');
+  context = offscreen.getContext('2d');
 
   simulation = d3.forceSimulation()
     .force("center", d3.forceCenter(width / 2, height / 2))
@@ -35,76 +39,62 @@ function setup(data){
     .alphaDecay(0.05);
 
   simulation.nodes(nodes).on("tick", () => {
-    context.save();
-
-    context.clearRect(0, 0, width, height);
-    context.translate(transform.x, transform.y);
-    context.scale(transform.k, transform.k);
-
-    context.strokeStyle = "rgba(0, 0, 0, 0.2)";
-    for (let i = 0; i < n; i++) {
-      let d = links[i];
-      context.beginPath();
-      context.moveTo(d.source.x, d.source.y);
-      context.lineTo(d.target.x, d.target.y);
-      context.stroke();
-    }
-
-    context.fillStyle = "rgba(128, 128, 255, 1)";
-    for (let i = 0; i < n; i++) {
-      let d = nodes[i];
-      context.beginPath();
-      context.arc(d.x, d.y, 5, 0, tao, true);
-      context.fill();
-    }
-
-    context.restore();
-
+    draw();
     ticks++;
   });
   simulation.force("link").links(links);
 }
 
-function invertX(x){
-  return (transform.x - x)/transform.k;
-}
+function draw(){
+  context.save();
 
-function invertY(y){
-  return (transform.y - y)/transform.k;
+  context.clearRect(0, 0, width, height);
+  context.translate(transform.x, transform.y);
+  context.scale(transform.k, transform.k);
+
+  context.strokeStyle = "rgba(0, 0, 0, 0.2)";
+  for (let i = 0; i < n; i++) {
+    let {source, target} = links[i];
+    context.beginPath();
+    context.moveTo(source.x, source.y);
+    context.lineTo(target.x, target.y);
+    context.stroke();
+  }
+
+  context.fillStyle = "#0000ff";
+  for (let i = 0; i < n; i++) {
+    let {x, y} = nodes[i];
+    context.beginPath();
+    context.arc(x, y, 5, 0, tao, true);
+    context.fill();
+  }
+
+  context.restore();
 }
 
 function dragsubject(e){
-  let x = invertX(e.x),
-      y = invertY(e.y);
-  let r2 = 25;
-  for (let i = 0; i < n; i++) {
-    let node = nodes[i];
-    let nx = node.x, ny = node.y;
-    let dx = x - nx;
-    let dy = y - ny;
-    if (dx * dx + dy * dy < r2) {
-      subject = node;
-      break;
-    }
-  }
+  subject = simulation.find(transform.invertX(e.x), transform.invertY(e.y), 25);
+  console.log(subject);
 }
 
 function dragstarted(e){
-  console.log(e);
   if (!e.active) simulation.alphaTarget(0.3).restart();
-	subject.fx = invertX(e.x);
-	subject.fy = invertY(e.y);
+	subject.fx = transform.invertX(e.x);
+  subject.fy = transform.invertY(e.y);
+  console.log('started');
 }
 
 function dragged(e) {
-	subject.fx = invertX(e.x);
-	subject.fy = invertY(e.y);
+	subject.fx = transform.invertX(e.x);
+  subject.fy = transform.invertY(e.y);
+  console.log('dragged');
 }
 
 function dragended(active) {
   if (!active) simulation.alphaTarget(0);
 	subject.fx = null;
   subject.fy = null;
+  console.log('dragged');
 }
 
 d3.interval(() => {
