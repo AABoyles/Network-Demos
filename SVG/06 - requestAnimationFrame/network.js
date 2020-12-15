@@ -61,63 +61,18 @@ let simulation = d3.forceSimulation()
   .alphaTarget(0)
   .alphaDecay(0.05);
 
-let moveItems = (function(){
-  let todoNode = 0;
-  let todoLink = 0;
-  let MAX_NODES = n/5;
-  let MAX_LINKS = MAX_NODES;
-
-  let restart = false;
-
-  function moveSomeNodes(){
-    let goal = Math.min(todoNode+MAX_NODES, n);
-
-    for(let i = todoNode; i < goal; i++){
-      let n = node._groups[0][i];
-      n.setAttribute('transform', `translate(${n.__data__.x}, ${n.__data__.y})`);
-    }
-
-    todoNode = goal;
-    requestAnimationFrame(moveSome)
-  }
-
-  function moveSomeLinks(){
-    let l;
-    let goal = Math.min(todoLink+MAX_LINKS, n);
-
-    for(let i=todoLink; i < goal; i++){
-      l = link._groups[0][i];
-      l.setAttribute('x1', l.__data__.source.x);
-      l.setAttribute('y1', l.__data__.source.y);
-      l.setAttribute('x2', l.__data__.target.x);
-      l.setAttribute('y2', l.__data__.target.y);
-    }
-
-    todoLink = goal;
-    requestAnimationFrame(moveSome)
-  }
-
-  function moveSome(){
-    if(todoNode < n){
-      moveSomeNodes();
-    } else if(todoLink < n){
-      moveSomeLinks();
-    } else if(restart){
-      restart = false;
-      todoNode = 0;
-      todoLink = 0;
-      requestAnimationFrame(moveSome);
-    }
-  }
-
-  return function moveItems(){
-    ticks++;
-    if(!restart){
-      restart = true;
-      requestAnimationFrame(moveSome);
-    }
-  };
-})();
-
-simulation.nodes(nodes).on("tick", moveItems);
+simulation.nodes(nodes).on("tick", () => requestAnimationFrame(moveItems));
 simulation.force("link").links(links);
+
+function moveItems(){
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node
+    .attr("transform", d => `translate(${d.x},${d.y})`);
+
+  ticks++;
+}
