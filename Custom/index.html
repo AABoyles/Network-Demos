@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Custom Force-Directed Graph</title>
+	<style>
+		html, body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		canvas {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+		}
+		.fade-in {
+			animation: fadeIn ease 2s;
+			-webkit-animation: fadeIn ease 2s;
+			-moz-animation: fadeIn ease 2s;
+			-o-animation: fadeIn ease 2s;
+			-ms-animation: fadeIn ease 2s;
+		}
+
+		@keyframes fadeIn {
+			0% {opacity:0;}
+			100% {opacity:1;}
+		}
+
+		@-moz-keyframes fadeIn {
+			0% {opacity:0;}
+			100% {opacity:1;}
+		}
+
+		@-webkit-keyframes fadeIn {
+			0% {opacity:0;}
+			100% {opacity:1;}
+		}
+
+		@-o-keyframes fadeIn {
+			0% {opacity:0;}
+			100% {opacity:1;}
+		}
+
+		@-ms-keyframes fadeIn {
+			0% {opacity:0;}
+			100% {opacity:1;}
+		}
+		#file-loader {
+			width: 400px;
+			padding: 50px;
+			margin: auto auto;
+			margin-top: calc(50% - 200px);
+
+		}
+	</style>
+</head>
+
+<body>
+	<div id="file-loader" class="fade-in">
+		<label for="link-file">Load a Link CSV</label><br>
+		<input id="link-file" type="file" accept="csv">
+	</div>
+
+	<canvas class="fade-in"></canvas>
+
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	<script src="lz-string.min.js"></script>
+	<script src="network.js"></script>
+</body>
+
+</html>
